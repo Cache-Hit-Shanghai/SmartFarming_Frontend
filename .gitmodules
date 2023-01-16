@@ -1,0 +1,6 @@
+[submodule "daxiao_ui_common"]
+	path = daxiao_ui_common
+	url = git@codeup.aliyun.com:62df4f231a358b4399af7cf6/daxiaocloud/ui/daxiao_ui_common.git
+[submodule "daxiao_js_common"]
+	path = daxiao_js_common
+	url = git@codeup.aliyun.com:62df4f231a358b4399af7cf6/daxiaocloud/js/daxiao_js_common.git
