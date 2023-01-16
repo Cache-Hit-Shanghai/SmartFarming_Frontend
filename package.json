@@ -1,0 +1,28 @@
+{
+  "name": "smartfarming_frontend",
+  "version": "1.0.0",
+  "description": "> 请介绍一下你的项目吧",
+  "main": "babel.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@codeup.aliyun.com:62df4f231a358b4399af7cf6/DaXiaoSmartFarming/SmartFarming_Frontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "daxiao_js_common": "file:daxiao_js_common",
+    "daxiao_ui_common": "file:daxiao_ui_common",
+    "next": "^13.1.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.6"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "webpack-bundle-analyzer": "^4.7.0",
+    "webpack-pwa-manifest": "^4.3.0"
+  }
+}

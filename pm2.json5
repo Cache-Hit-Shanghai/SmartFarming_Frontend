@@ -1,0 +1,14 @@
+{
+  apps: [
+    {
+      name: '',
+      script: 'npx next start  -p 3000',
+      exec_mode: 'fork',
+      instances: 1,
+      env: {
+        NODE_ENV: 'production',
+        NODE_PORT: 3000,
+      },
+    },
+  ],
+}
