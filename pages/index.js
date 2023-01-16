@@ -6,11 +6,7 @@ import { Button } from 'grommet';
 import { Close } from 'grommet-icons';
 
 const Component = () => {
-  return (
-    <Box pad='10px' height='100%' gap='20px' flex={{ shrink: 1 }} background='#f5f5f5'>
-      home
-    </Box>
-  );
+  return <MyHeader></MyHeader>;
 };
 
 const Page = withProjectPage({ Component });

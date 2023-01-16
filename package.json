@@ -4,7 +4,8 @@
   "description": "> 请介绍一下你的项目吧",
   "main": "babel.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_PORT=3100 next -p 3100"
   },
   "repository": {
     "type": "git",
@@ -15,6 +16,8 @@
   "dependencies": {
     "daxiao_js_common": "file:daxiao_js_common",
     "daxiao_ui_common": "file:daxiao_ui_common",
+    "grommet": "^2.29.0",
+    "grommet-icons": "^4.8.0",
     "next": "^13.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -22,6 +25,8 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
+    "eslint": "^8.32.0",
+    "eslint-plugin-react": "^7.32.0",
     "webpack-bundle-analyzer": "^4.7.0",
     "webpack-pwa-manifest": "^4.3.0"
   }
