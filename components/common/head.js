@@ -37,6 +37,8 @@ const Head = ({ list = [], background, headerStyle = {}, href, iconBackground, i
     };
   });
 
+  return;
+
   return (
     <Header
       background={background || 'white'}

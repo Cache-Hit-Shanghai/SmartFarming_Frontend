@@ -10,8 +10,8 @@ const JuJiuApp = ({ Component, pageProps }) => {
       <Head>
         <title>DaXiao</title>
       </Head>
-
       <Component {...pageProps} />
+      {/* <Script src='https://api.map.baidu.com/api?type=webgl&v=1.0&ak=9ObPZsFGsmHvKU20DEWRkVAeYxR5I71e'></Script> */}
       {/* <Script src='/js/opencv.js'></Script> */}
     </>
   );

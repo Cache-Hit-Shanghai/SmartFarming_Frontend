@@ -14,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@uiw/react-baidu-map": "^2.5.5",
     "daxiao_js_common": "file:daxiao_js_common",
     "daxiao_ui_common": "file:daxiao_ui_common",
     "grommet": "^2.29.0",
@@ -26,6 +27,8 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^8.32.0",
+    "eslint-config-next": "^13.1.2",
+    "eslint-plugin-next": "^0.0.0",
     "eslint-plugin-react": "^7.32.0",
     "webpack-bundle-analyzer": "^4.7.0",
     "webpack-pwa-manifest": "^4.3.0"
