@@ -15,8 +15,28 @@ import {
   Grommet,
 } from 'grommet';
 import { Cloud, PowerShutdown, Sun, User } from 'grommet-icons';
-import { useEffect, useState } from 'react';
-import { Map, APILoader } from '@uiw/react-baidu-map';
+import { useEffect, useState, useRef } from 'react';
+import { Map, APILoader, CustomOverlay, Marker } from '@uiw/react-baidu-map';
+
+//* Function
+
+/**
+ *
+ * @param {BMap.Map} map
+ * @returns
+ */
+function mapSetFitView(map) {
+  if (!map) return;
+
+  const points = [];
+  map.getOverlays().forEach((overlay) => {
+    if (!overlay.isVisible()) return;
+    points.push(overlay.getPosition());
+  });
+  map.setViewport(points);
+}
+
+//* Component
 
 const Section = ({ title, children, ...passProps }) => {
   return (
@@ -146,13 +166,57 @@ const MainSectionInfoLayer = ({ tab }) => {
 };
 
 const MainSection = ({ ...passProps }) => {
+  const mapPointsData = [
+    {
+      name: '黄花茶山',
+      position: { lng: 121.444895, lat: 31.21246 },
+      details: [
+        { label: 'EC', value: '45.0' },
+        { label: '土壤温度', value: '6.0' },
+        { label: '土壤湿度', value: '5.8' },
+        { label: '空气温度', value: '9.8' },
+        { label: '空气湿度', value: '70.3' },
+        { label: '光照', value: '32809.0' },
+      ],
+    },
+    {
+      name: '中药种植',
+      position: { lng: 121.611621, lat: 31.293465 },
+      details: [
+        { label: 'EC', value: '45.0' },
+        { label: '土壤温度', value: '6.0' },
+        { label: '土壤湿度', value: '5.8' },
+        { label: '空气温度', value: '9.8' },
+        { label: '空气湿度', value: '70.3' },
+        { label: '光照', value: '32809.0' },
+      ],
+    },
+  ];
+
   const [tab, setTab] = useState('作物信息');
-  const [map, setMap] = useState();
+  const [mapAPILoader, setMapAPILoader] = useState(null);
+  const [selectedPoint, setSelectedPoint] = useState();
+  /**@type {{current: BMap.Map}} */
+  const map = useRef(null);
 
   useEffect(() => {
-    setMap(
+    if (map.current) return;
+    setMapAPILoader(
       <APILoader akay='9ObPZsFGsmHvKU20DEWRkVAeYxR5I71e'>
-        <Map center='上海' />
+        <Map
+          enableScrollWheelZoom={true}
+          ref={(props) => {
+            if (!props?.map) return;
+
+            map.current = props.map;
+          }}
+          center='上海'
+          zoom={12}
+        >
+          {mapPointsData.map(({ name, position }) => (
+            <Marker key={name} position={position} title={name} type='loc_red' />
+          ))}
+        </Map>
       </APILoader>
     );
   }, []);
@@ -179,21 +243,26 @@ const MainSection = ({ ...passProps }) => {
               <Box
                 key={label}
                 onClick={() => setTab(label)}
-                background={selected ? { color: 'black', opacity: 0.3 } : ''}
+                background={selected ? { color: 'grey' } : ''}
                 pad='5px'
                 focusIndicator={false}
               >
-                <Text color={selected ? 'white' : 'grey'}>{label}</Text>
+                <Text color={selected ? 'white' : 'dark-3'}>{label}</Text>
               </Box>
             );
           })}
         </Box>
         <Box flex='grow' direction='row' justify='end'>
-          <CheckBox label='卫星图' />
+          <CheckBox
+            label='卫星图'
+            onChange={(event) => {
+              map.current.setMapType(event.target.checked ? BMAP_SATELLITE_MAP : BMAP_NORMAL_MAP);
+            }}
+          />
         </Box>
       </Box>
       <Box flex='grow' style={{ position: 'relative' }}>
-        <div style={{ width: '100%', height: '100%' }}>{map}</div>
+        <div style={{ width: '100%', height: '100%' }}>{mapAPILoader}</div>
         <Box
           width='100%'
           height={{ min: '15%' }}
@@ -203,12 +272,45 @@ const MainSection = ({ ...passProps }) => {
         >
           <MainSectionInfoLayer tab={tab} />
         </Box>
-        {/* <Box
+        <Box
           width='100%'
           height='18vh'
-          background='rgba(0,0,0,0.5)'
           style={{ position: 'absolute', bottom: '0px' }}
-        ></Box> */}
+          direction='row'
+          gap='small'
+          pad={{ horizontal: 'medium', bottom: 'small' }}
+          justify='center'
+        >
+          {mapPointsData.map(({ name, details, position }) => (
+            <Box
+              key={name}
+              width='30%'
+              background='rgba(0,0,0,0.5)'
+              align='center'
+              justify='center'
+              pad='small'
+              gap='small'
+              onClick={() => {
+                map.current.setCenter(new BMap.Point(position.lng, position.lat));
+                setSelectedPoint(name);
+              }}
+              focusIndicator={false}
+              border={selectedPoint === name ? { style: 'dashed', color: 'black', size: 'medium' } : null}
+            >
+              <Text size='small' weight='bold'>
+                {name}
+              </Text>
+              <Box direction='row' wrap={true} style={{ rowGap: '10px' }}>
+                {details.map(({ label, value }) => (
+                  <Box key={label} align='center' width='33%'>
+                    <Text size='small'>{label}</Text>
+                    <Text size='small'>{value}</Text>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Box>
   );
@@ -263,9 +365,9 @@ const Content = () => {
                 type='circle'
                 thickness='large'
                 values={[
-                  { value: 3, color: 'red' },
-                  { value: 3, color: 'blue' },
-                  { value: 2, color: 'orange' },
+                  { value: 3, color: 'graph-0' },
+                  { value: 3, color: 'graph-1' },
+                  { value: 2, color: 'graph-2' },
                 ]}
                 max={8}
               />
@@ -276,9 +378,9 @@ const Content = () => {
             </Stack>
           </Box>
           <Box>
-            <Text color='red'>果园 3</Text>
-            <Text color='blue'>茶园 3</Text>
-            <Text color='orange'>菜地 2</Text>
+            <Text color='graph-0'>果园 3</Text>
+            <Text color='graph-1'>茶园 3</Text>
+            <Text color='graph-2'>菜地 2</Text>
           </Box>
         </Box>
       </Section>
@@ -291,10 +393,10 @@ const Content = () => {
                 type='circle'
                 thickness='large'
                 values={[
-                  { value: 36, color: 'red' },
-                  { value: 21, color: 'blue' },
-                  { value: 15, color: 'orange' },
-                  { value: 97, color: 'accent-3' },
+                  { value: 36, color: 'graph-0' },
+                  { value: 21, color: 'graph-1' },
+                  { value: 15, color: 'graph-2' },
+                  { value: 97, color: 'graph-3' },
                 ]}
                 max={169}
               />
@@ -305,10 +407,10 @@ const Content = () => {
             </Stack>
           </Box>
           <Box>
-            <Text color='red'>开关 36</Text>
-            <Text color='blue'>集中器 21</Text>
-            <Text color='orange'>空气湿度 15</Text>
-            <Text color='accent-3'>其他 97</Text>
+            <Text color='graph-0'>开关 36</Text>
+            <Text color='graph-1'>集中器 21</Text>
+            <Text color='graph-2'>空气湿度 15</Text>
+            <Text color='graph-3'>其他 97</Text>
           </Box>
         </Box>
       </Section>
