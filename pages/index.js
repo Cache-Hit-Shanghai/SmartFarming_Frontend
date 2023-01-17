@@ -49,8 +49,8 @@ const MainSectionInfoLayer = ({ tab }) => {
           <Box gap='xsmall'>
             <Box direction='row' gap='small'>
               <Text>蝉茶种植2</Text>
-              <Box background='rgba(255,255,255,0.1)' round='medium' pad={{ horizontal: 'small' }}>
-                <Text color='grey'>已结束</Text>
+              <Box background='rgba(255,255,255,0.2)' round='medium' pad={{ horizontal: 'small' }}>
+                <Text color='rgba(0,0,0,0.5)'>已结束</Text>
               </Box>
             </Box>
             <Box direction='row' gap='medium'>
@@ -192,14 +192,23 @@ const MainSection = ({ ...passProps }) => {
           <CheckBox label='卫星图' />
         </Box>
       </Box>
-      <Box flex='grow'>
-        <Stack fill={true} anchor='center'>
-          <div style={{ width: '100%', height: '100%' }}>{map}</div>
-          {/* <Box width='100%' height={{ min: '15%' }} background='rgba(0,0,0,0.5)' pad='medium'>
-            <MainSectionInfoLayer tab={tab} />
-          </Box> */}
-          {/* <Box width='100%' height='18vh' background='rgba(0,0,0,0.5)' style={{  }}></Box> */}
-        </Stack>
+      <Box flex='grow' style={{ position: 'relative' }}>
+        <div style={{ width: '100%', height: '100%' }}>{map}</div>
+        <Box
+          width='100%'
+          height={{ min: '15%' }}
+          background='rgba(0,0,0,0.5)'
+          pad='medium'
+          style={{ position: 'absolute', top: '0px', left: '0px' }}
+        >
+          <MainSectionInfoLayer tab={tab} />
+        </Box>
+        {/* <Box
+          width='100%'
+          height='18vh'
+          background='rgba(0,0,0,0.5)'
+          style={{ position: 'absolute', bottom: '0px' }}
+        ></Box> */}
       </Box>
     </Box>
   );
