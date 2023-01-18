@@ -283,12 +283,11 @@ const MainSection = ({ ...passProps }) => {
         <Box
           width='100%'
           height='18vh'
-          style={{ position: 'absolute', bottom: '0px', zIndex: 20 }}
+          style={{ position: 'absolute', bottom: '0px', zIndex: 5, pointerEvents: 'none' }}
           direction='row'
           gap='small'
           pad={{ horizontal: 'medium', bottom: 'small' }}
           justify='center'
-          background='rgba(0,0,0,0.2)'
         >
           {mapPointsData.map(({ name, details, position }) => (
             <Box
@@ -309,6 +308,7 @@ const MainSection = ({ ...passProps }) => {
               }}
               focusIndicator={false}
               border={selectedPoint === name ? { style: 'dashed', color: 'black', size: 'medium' } : null}
+              style={{ pointerEvents: 'all' }}
             >
               <Text size='small' weight='bold'>
                 {name}
@@ -329,7 +329,7 @@ const MainSection = ({ ...passProps }) => {
   );
 };
 
-const MyHeader = () => {
+const PageHeader = () => {
   return (
     <Header background='brand' pad={{ horizontal: 'medium' }} height='9vh'>
       <Box width='25%' direction='row' gap='medium' align='end' height='100%' pad={{ bottom: 'small' }}>
@@ -528,8 +528,8 @@ const Content = () => {
 const Component = () => {
   return (
     // <Grommet theme={{ global: { font: { size: '1.2vw' } }, text: { medium: { size: '1.2vw' } } }}>
-    <Box flex='grow'>
-      <MyHeader />
+    <Box fill={true}>
+      <PageHeader />
       <Content />
     </Box>
     // </Grommet>
