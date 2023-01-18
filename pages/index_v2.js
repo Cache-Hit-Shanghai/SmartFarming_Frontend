@@ -16,7 +16,8 @@ import {
 } from 'grommet';
 import { Cloud, PowerShutdown, Sun, User } from 'grommet-icons';
 import { useEffect, useState, useRef } from 'react';
-import { Map, APILoader, CustomOverlay, Marker, useMap } from '@uiw/react-baidu-map';
+import { Map } from '@uiw/react-baidu-map';
+import Script from 'next/script';
 
 //* Function
 
@@ -194,34 +195,28 @@ const MainSection = ({ ...passProps }) => {
   ];
 
   const [tab, setTab] = useState('作物信息');
-  const [mapAPILoader, setMapAPILoader] = useState(null);
   const [selectedPoint, setSelectedPoint] = useState();
   /**@type {{current: BMap.Map}} */
   const mapRef = useRef(null);
 
   useEffect(() => {
-    /**
-     * @param {{map: BMap.Map, BMap: BMap}}
-     */
-    const MapHandle = ({ map, BMap, container }) => {
-      useEffect(() => {
-        if (!map || !BMap) return;
-        mapRef.current = map;
+    window.BMap = BMapGL;
 
-        mapPointsData.forEach(({ name, position: { lng, lat } }) => {
-          const point = new BMap.Point(lng, lat);
-          map.addOverlay(new BMap.Marker(point, { title: name }));
-        });
-      }, []);
-    };
+    const map = new BMapGL.Map('mapContainer');
+    map.centerAndZoom(new BMapGL.Point(121.532282, 31.267294), 12);
+    map.enableScrollWheelZoom();
+    mapRef.current = map;
 
-    setMapAPILoader(
-      <APILoader akay='9ObPZsFGsmHvKU20DEWRkVAeYxR5I71e'>
-        <Map enableScrollWheelZoom={true} zoom={12} autoLocalCity={false} currentCity={'上海市'}>
-          <MapHandle />
-        </Map>
-      </APILoader>
-    );
+    console.log('map.getOverlays():', map.getOverlays());
+    mapPointsData.forEach(({ name, position: { lng, lat } }) => {
+      const point = new BMap.Point(lng, lat);
+      map.addOverlay(new BMap.Marker(point, { title: name }));
+    });
+
+    setTimeout(() => {
+      console.log('mapSetFitView');
+      mapSetFitView(map);
+    });
   }, []);
 
   return (
@@ -256,7 +251,8 @@ const MainSection = ({ ...passProps }) => {
             );
           })}
         </Box>
-        <Box flex='grow' direction='row' justify='end'>
+        <Box flex='grow' direction='row' justify='end' gap='small'>
+          <Button label='回到中心' onClick={() => mapSetFitView(mapRef.current)} />
           <CheckBox
             label='卫星图'
             onChange={(event) => {
@@ -268,7 +264,7 @@ const MainSection = ({ ...passProps }) => {
         </Box>
       </Box>
       <Box flex='grow' style={{ position: 'relative' }}>
-        <div style={{ width: '100%', height: '100%' }}>{mapAPILoader}</div>
+        <div id='mapContainer' style={{ width: '100%', height: '100%' }} />
         <Box
           width='100%'
           height={{ min: '15%' }}
