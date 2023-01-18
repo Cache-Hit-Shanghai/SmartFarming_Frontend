@@ -283,7 +283,7 @@ const MainSection = ({ ...passProps }) => {
         <Box
           width='100%'
           height='18vh'
-          style={{ position: 'absolute', bottom: '0px', zIndex: 5, pointerEvents: 'none' }}
+          style={{ position: 'absolute', bottom: '0px', zIndex: 20, pointerEvents: 'none' }}
           direction='row'
           gap='small'
           pad={{ horizontal: 'medium', bottom: 'small' }}
