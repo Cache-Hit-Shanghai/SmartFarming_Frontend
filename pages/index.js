@@ -1,3 +1,5 @@
+// index_v2
+
 import { withProjectPage } from '../components';
 import {
   Button,
@@ -16,7 +18,8 @@ import {
 } from 'grommet';
 import { Cloud, PowerShutdown, Sun, User } from 'grommet-icons';
 import { useEffect, useState, useRef } from 'react';
-import { Map, APILoader, CustomOverlay, Marker, useMap } from '@uiw/react-baidu-map';
+import { Map } from '@uiw/react-baidu-map';
+import Script from 'next/script';
 
 //* Function
 
@@ -194,34 +197,30 @@ const MainSection = ({ ...passProps }) => {
   ];
 
   const [tab, setTab] = useState('作物信息');
-  const [mapAPILoader, setMapAPILoader] = useState(null);
   const [selectedPoint, setSelectedPoint] = useState();
   /**@type {{current: BMap.Map}} */
   const mapRef = useRef(null);
 
   useEffect(() => {
-    /**
-     * @param {{map: BMap.Map, BMap: BMap}}
-     */
-    const MapHandle = ({ map, BMap, container }) => {
-      useEffect(() => {
-        if (!map || !BMap) return;
-        mapRef.current = map;
+    window.BMap = BMapGL;
 
-        mapPointsData.forEach(({ name, position: { lng, lat } }) => {
-          const point = new BMap.Point(lng, lat);
-          map.addOverlay(new BMap.Marker(point, { title: name }));
-        });
-      }, []);
-    };
+    const map = new BMapGL.Map('mapContainer');
+    console.log('map.isLoaded():', map.isLoaded());
+    map.centerAndZoom(new BMapGL.Point(121.532282, 31.267294), 12);
+    console.log('map.isLoaded() after map.centerAndZoom:', map.isLoaded());
+    map.enableScrollWheelZoom();
+    mapRef.current = map;
 
-    setMapAPILoader(
-      <APILoader akay='9ObPZsFGsmHvKU20DEWRkVAeYxR5I71e'>
-        <Map enableScrollWheelZoom={true} zoom={12} autoLocalCity={false} currentCity={'上海市'}>
-          <MapHandle />
-        </Map>
-      </APILoader>
-    );
+    console.log('map.getOverlays():', map.getOverlays());
+    mapPointsData.forEach(({ name, position: { lng, lat } }) => {
+      const point = new BMap.Point(lng, lat);
+      map.addOverlay(new BMap.Marker(point, { title: name }));
+    });
+
+    setTimeout(() => {
+      console.log('mapSetFitView');
+      mapSetFitView(map);
+    }, 1000);
   }, []);
 
   return (
@@ -246,6 +245,7 @@ const MainSection = ({ ...passProps }) => {
             return (
               <Box
                 key={label}
+                // onClick={() => setTab((prev) => (prev === label ? null : label))}
                 onClick={() => setTab(label)}
                 background={selected ? { color: 'grey' } : ''}
                 pad='5px'
@@ -256,7 +256,8 @@ const MainSection = ({ ...passProps }) => {
             );
           })}
         </Box>
-        <Box flex='grow' direction='row' justify='end'>
+        <Box flex='grow' direction='row' justify='end' gap='small'>
+          <Button label='回到中心' onClick={() => mapSetFitView(mapRef.current)} />
           <CheckBox
             label='卫星图'
             onChange={(event) => {
@@ -268,24 +269,26 @@ const MainSection = ({ ...passProps }) => {
         </Box>
       </Box>
       <Box flex='grow' style={{ position: 'relative' }}>
-        <div style={{ width: '100%', height: '100%' }}>{mapAPILoader}</div>
-        <Box
-          width='100%'
-          height={{ min: '15%' }}
-          background='rgba(0,0,0,0.6)'
-          pad='medium'
-          style={{ position: 'absolute', top: '0px', left: '0px' }}
-        >
-          <MainSectionInfoLayer tab={tab} />
-        </Box>
+        <div id='mapContainer' style={{ width: '100%', height: '100%' }} />
+        {tab && (
+          <Box
+            width='100%'
+            background='rgba(0,0,0,0.6)'
+            pad='medium'
+            style={{ position: 'absolute', top: '0px', left: '0px' }}
+          >
+            <MainSectionInfoLayer tab={tab} />
+          </Box>
+        )}
         <Box
           width='100%'
           height='18vh'
-          style={{ position: 'absolute', bottom: '0px' }}
+          style={{ position: 'absolute', bottom: '0px', zIndex: 20 }}
           direction='row'
           gap='small'
           pad={{ horizontal: 'medium', bottom: 'small' }}
           justify='center'
+          background='rgba(0,0,0,0.2)'
         >
           {mapPointsData.map(({ name, details, position }) => (
             <Box
@@ -300,7 +303,8 @@ const MainSection = ({ ...passProps }) => {
                 const map = mapRef.current;
                 if (!map) return;
 
-                map.centerAndZoom(new BMap.Point(position.lng, position.lat), 14);
+                // map.centerAndZoom(new BMap.Point(position.lng, position.lat), 14);
+                map.panTo(new BMap.Point(position.lng, position.lat));
                 setSelectedPoint(name);
               }}
               focusIndicator={false}
