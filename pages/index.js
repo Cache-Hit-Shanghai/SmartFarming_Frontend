@@ -528,7 +528,7 @@ const Content = () => {
 const Component = () => {
   return (
     // <Grommet theme={{ global: { font: { size: '1.2vw' } }, text: { medium: { size: '1.2vw' } } }}>
-    <Box fill={true}>
+    <Box fill={true} style={{ height: '100vh', overflow: 'auto' }}>
       <PageHeader />
       <Content />
     </Box>
