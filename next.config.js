@@ -38,6 +38,7 @@ module.exports = (phase) => {
       return config;
     },
     distDir: phase === PHASE_DEVELOPMENT_SERVER ? '.next' : 'build',
+    output: 'out',
     async headers() {
       return [
         {

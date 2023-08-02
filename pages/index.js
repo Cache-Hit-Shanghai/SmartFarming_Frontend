@@ -1,6 +1,6 @@
 // index_v2
 
-import { withProjectPage } from '../components';
+// import { withProjectPage } from '../components';
 import {
   Button,
   Clock,
@@ -536,10 +536,10 @@ const Component = () => {
   );
 };
 
-const Page = withProjectPage({ Component });
+// const Page = withProjectPage({ Component });
 
-const getServerSideProps = Page.makeGetServerSideProps();
+// const getServerSideProps = Page.makeGetServerSideProps();
 
-export { getServerSideProps };
+// export { getServerSideProps };
 
-export default Page;
+export default Component;

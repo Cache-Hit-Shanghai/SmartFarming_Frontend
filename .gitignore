@@ -119,4 +119,3 @@ build/
 frontend/
 back/
 frontend.tar.gz
-package-lock.json

@@ -17,8 +17,6 @@
   "license": "ISC",
   "dependencies": {
     "@uiw/react-baidu-map": "^2.5.5",
-    "daxiao_js_common": "file:daxiao_js_common",
-    "daxiao_ui_common": "file:daxiao_ui_common",
     "grommet": "^2.29.0",
     "grommet-icons": "^4.8.0",
     "next": "^13.1.2",
